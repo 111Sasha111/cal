@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double calculateMonthlyPayment(double principal, double annualInterestRate, int loanTermMonths, bool isAnnuity) {
+    double monthlyInterestRate = annualInterestRate / 12 / 100;
+    if (isAnnuity) {
+        return principal * (monthlyInterestRate * pow(1 + monthlyInterestRate, loanTermMonths)) /
+               (pow(1 + monthlyInterestRate, loanTermMonths) - 1);
+    } else {
+        return principal / loanTermMonths +
+               (principal * monthlyInterestRate * (1 + monthlyInterestRate)) / 2;
+    }
+}
+
+double calculateTotalPayment(double monthlyPayment, int loanTermMonths) {
+    return monthlyPayment * loanTermMonths;
+}
+
+double calculateOverpayment(double totalPayment, double principal) {
+    return totalPayment - principal;
+}
+
+int main() {
+    double principal; // общая сумма кредита
+    double annualInterestRate; // процентная ставка (годовая)
+    int loanTermYears; // срок кредита в годах
+    bool isAnnuity; // тип кредита (true для аннуитетного, false для дифференцированного)
+
+    // Ввод данных от пользователя
+    cout << "Введите общую сумму кредита: ";
+    cin >> principal;
+
+    cout << "Введите годовую процентную ставку: ";
+    cin >> annualInterestRate;
+
+    cout << "Введите срок кредита в годах: ";
+    cin >> loanTermYears;
+
+    cout << "Введите тип кредита (1 - аннуитетный, 0 - дифференцированный): ";
+    cin >> isAnnuity;
+
+    int loanTermMonths = loanTermYears * 12; // Переводим срок кредита в месяцы
+
+    // Рассчитываем ежемесячный платеж
+    double monthlyPayment = calculateMonthlyPayment(principal, annualInterestRate, loanTermMonths, isAnnuity);
+
+    // Рассчитываем общую выплату и переплату
+    double totalPayment = calculateTotalPayment(monthlyPayment, loanTermMonths);
+    double overpayment = calculateOverpayment(totalPayment, principal);
+
+    // Вывод результатов
+    cout << "Ежемесячный платеж: " << monthlyPayment << endl;
+    cout << "Общая выплата: " << totalPayment << endl;
+    cout << "Переплата по кредиту: " << overpayment << endl;
+
+    return 0;
+}
